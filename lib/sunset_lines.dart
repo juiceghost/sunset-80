@@ -1,145 +1,82 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
-import 'dart:ui' as ui;
 
-class SunsetLines extends StatelessWidget {
-  const SunsetLines({super.key});
+class SunsetBackground extends StatelessWidget {
+  const SunsetBackground({super.key});
+
+  // These colors represent the gradient from top to bottom
+  static const List<Color> sunsetColors = [
+    Color(0xFF1A1A1A), // Dark top
+    Color(0xFF1A1A1A),
+    Color(0xFF1E2329),
+    Color(0xFF1E2833),
+    Color(0xFF1F2D3D),
+    Color(0xFF203147),
+    Color(0xFF213551),
+    Color(0xFF22395B),
+    Color(0xFF233D65),
+    Color(0xFF24426F),
+    Color(0xFF254679),
+    Color(0xFF264A83),
+    Color(0xFF274E8D),
+    Color(0xFF285297),
+    Color(0xFF2956A1),
+    Color(0xFF2A5AAB),
+    Color(0xFF2B5EB5),
+    Color(0xFF2C62BF),
+    Color(0xFF2D66C9),
+    Color(0xFF2E6AD3),
+    Color(0xFF2F6EDD),
+    Color(0xFF3072E7),
+    Color(0xFF2F6EDD),
+    Color(0xFF2E6AD3),
+    Color(0xFF2D66C9),
+    Color(0xFF2C62BF),
+    Color(0xFF2B5EB5),
+    Color(0xFF2A5AAB),
+    Color(0xFF2956A1),
+    Color(0xFF285297),
+    Color(0xFF274E8D),
+    Color(0xFF264A83),
+    Color(0xFF254679),
+    Color(0xFF24426F),
+    Color(0xFF233D65),
+    Color(0xFF22395B),
+    Color(0xFF213551),
+    Color(0xFF203147),
+    Color(0xFF1F2D3D),
+    Color(0xFF1E2833),
+    Color(0xFF1D2329),
+    Color(0xFF1C1F1F),
+    Color(0xFF1A1A1A),
+    Color(0xFF1A1A1A),
+    Color(0xFF1A1A1A),
+    Color(0xFF331A1A),
+    Color(0xFF4D1A1A),
+    Color(0xFF661A1A),
+    Color(0xFF801A1A),
+    Color(0xFF991A1A),
+    Color(0xFFB31A1A),
+    Color(0xFFCC1A1A),
+    Color(0xFFE61A1A),
+    Color(0xFFFF1A1A),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Container(
-          width: 240,
-          height: 500,
-          child: CustomPaint(
-            painter: SunsetLinesPainter(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bandHeight = constraints.maxHeight / sunsetColors.length;
+
+        return Column(
+          children: List.generate(
+            sunsetColors.length,
+                (index) => Container(
+              height: bandHeight,
+              color: sunsetColors[index],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
-}
-
-class SunsetLinesPainter extends CustomPainter {
-  Color getGradientColor(double progress) {
-    if (progress < 0.2) {
-      return HSLColor.fromAHSL(
-        1.0,
-        280,
-        0.6,
-        0.25,
-      ).toColor();
-    } else if (progress < 0.4) {
-      double localProgress = (progress - 0.2) * 5;
-      return HSLColor.fromAHSL(
-        1.0,
-        220 - (localProgress * 40),
-        0.5,
-        0.3,
-      ).toColor();
-    } else if (progress < 0.6) {
-      double localProgress = (progress - 0.4) * 5;
-      return HSLColor.fromAHSL(
-        1.0,
-        180 - (localProgress * 60),
-        0.4,
-        0.35,
-      ).toColor();
-    } else if (progress < 0.8) {
-      double localProgress = (progress - 0.6) * 5;
-      return HSLColor.fromAHSL(
-        1.0,
-        120 - (localProgress * 60),
-        0.5,
-        math.max(0.2, 0.35 - localProgress * 0.15),
-      ).toColor();
-    } else {
-      double localProgress = (progress - 0.8) * 5;
-      return HSLColor.fromAHSL(
-        1.0,
-        60 - (localProgress * 30),
-        0.6,
-        math.max(0.15, 0.3 - localProgress * 0.15),
-      ).toColor();
-    }
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final numberOfLines = 54;
-    final spacing = size.height / numberOfLines;
-    final lineThickness = 2.5;
-
-    final sunCenterX = size.width / 2;
-    final sunCenterY = size.height * 0.937; // Moved up by one line spacing
-    final sunRadius = size.width * 0.25;
-    final verticalCompressionFactor = 0.7;
-
-    // Draw background lines
-    for (int i = 0; i < numberOfLines; i++) {
-      final progress = i / numberOfLines;
-      final y = spacing * i;
-
-      final paint = Paint()
-        ..strokeWidth = lineThickness
-        ..style = PaintingStyle.stroke
-        ..color = getGradientColor(progress);
-
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        paint,
-      );
-    }
-
-    // Draw sun with smooth thickness transition
-    var sunLineCount = 0;
-    for (int i = 0; i < numberOfLines; i++) {
-      final y = spacing * i;
-      final scaledDistance = (y - sunCenterY) / verticalCompressionFactor;
-      if (scaledDistance.abs() <= sunRadius) {
-        final distanceFromCenter = scaledDistance.abs();
-        final halfWidth = math.cos(math.asin(distanceFromCenter / sunRadius)) * sunRadius;
-
-        final segments = 40;
-        for (int j = 0; j < segments; j++) {
-          final xProgress = j / (segments - 1);
-          final x = sunCenterX - halfWidth + (halfWidth * 2 * xProgress);
-          final nextX = sunCenterX - halfWidth + (halfWidth * 2 * ((j + 1) / (segments - 1)));
-
-          final distanceFromCenterX = ((x + nextX) / 2 - sunCenterX).abs() / halfWidth;
-          final thicknessProgress = distanceFromCenterX > 0.8 ?
-          math.pow(1 - ((distanceFromCenterX - 0.8) / 0.2), 1.5).toDouble() : 1.0;
-          final thickness = 1.5 + (thicknessProgress * 5.0);
-
-          Color sunColor;
-          if (sunLineCount == 0) {
-            sunColor = Color(0xFFFFE082);
-          } else if (sunLineCount <= 2) {
-            sunColor = Color(0xFFFB8C00);
-          } else {
-            sunColor = Color(0xFFD32F2F);
-          }
-
-          final paint = Paint()
-            ..strokeWidth = thickness
-            ..style = PaintingStyle.stroke
-            ..color = sunColor
-            ..maskFilter = MaskFilter.blur(BlurStyle.normal, thickness * 0.2);
-
-          canvas.drawLine(
-            Offset(x, y),
-            Offset(nextX, y),
-            paint,
-          );
-        }
-        sunLineCount++;
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
