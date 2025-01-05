@@ -5,6 +5,17 @@ import 'package:flutter/material.dart';
 class StorageService {
   static const String _schemesKey = 'sunset_color_schemes';
   static const String _lastUsedSchemeKey = 'last_used_scheme';
+  static const String _sunPositionKey = 'sun_position';
+
+  static double loadSunPosition() {
+    final String? stored = html.window.localStorage[_sunPositionKey];
+    if (stored == null) return 0.2; // Default position
+    return double.tryParse(stored) ?? 1.0;
+  }
+
+  static void saveSunPosition(double position) {
+    html.window.localStorage[_sunPositionKey] = position.toString();
+  }
 
   static Map<String, List<Color>>? loadSchemes() {
     final String? stored = html.window.localStorage[_schemesKey];

@@ -18,11 +18,20 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
   late Map<String, List<Color>> savedSchemes;
   String currentSchemeName = 'Default';
   bool _showBlinds = true;
+  double _sunPosition = StorageService.loadSunPosition(); // Load saved position
+  double _sunSquish = 1.0;  // Default squish
 
   @override
   void initState() {
     super.initState();
     _initializeSchemes();
+  }
+
+  void _updateSunPosition(double value) {
+    setState(() {
+      _sunPosition = value;
+      StorageService.saveSunPosition(value);
+    });
   }
 
   void _initializeSchemes() {
@@ -233,7 +242,7 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          bool isWide = constraints.maxWidth > 900;
+          bool isWide = constraints.maxWidth > 600;
 
           if (isWide) {
             return Row(
@@ -268,6 +277,24 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
                           ),
                         ],
                       ),
+                      const Text(
+                        'Sun Position',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.arrow_downward, color: Colors.white, size: 16),
+                          Expanded(
+                            child: Slider(
+                              value: _sunPosition,
+                              onChanged: _updateSunPosition,
+                              min: -0.2, // Allow movement past bottom
+                              max: 1.2,  // Allow movement past top
+                            ),
+                          ),
+                          const Icon(Icons.arrow_upward, color: Colors.white, size: 16),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -280,6 +307,8 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
                       child: SunsetWithBlinds(
                         controlColors: controlColors,
                         showBlinds: _showBlinds,
+                        sunPosition: _sunPosition,
+                        sunSquish: _sunSquish,
                       ),
                     ),
                   ),
