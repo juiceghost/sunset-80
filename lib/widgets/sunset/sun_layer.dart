@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/sun_colors.dart';
+
 class SunLayer extends StatelessWidget {
   final double sunPosition;
   final double sunSize;
@@ -12,18 +14,6 @@ class SunLayer extends StatelessWidget {
     this.sunSize = 140,
     this.squishFactor = 1.2, // Default squish amount
   });
-
-  Color _getSunColor(int bandIndex) {
-    if (bandIndex >= 51) {
-      return const Color(0xFFFF3300); // Orange-red
-    } else if (bandIndex >= 49) {
-      return const Color(0xFFFF6600); // Orange
-    } else if (bandIndex >= 47) {
-      return const Color(0xFFFF9900); // Yellow-orange
-    } else {
-      return const Color(0xFFFFCC00); // Yellow
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +38,15 @@ class SunLayer extends StatelessWidget {
                     children: List.generate(totalBands, (index) {
                       final bandHeight = constraints.maxHeight / totalBands;
                       final bandTop = index * bandHeight;
+                      //final bandIndex = SunColors.getBandIndex(y, constraints.maxHeight);
+                      final color = SunColors.getColorAtBand(index);
                       return Positioned(
                         left: 0,
                         right: 0,
                         top: bandTop - (currentPosition - squishHeight/2),
                         height: bandHeight,
                         child: Container(
-                          color: _getSunColor(index),
+                          color: color,
                         ),
                       );
                     }),

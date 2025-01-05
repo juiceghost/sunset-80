@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
+import '../../utils/sun_colors.dart';
+
 class VenetianBlinds extends StatelessWidget {
   final int numberOfBlinds;
   final double slatsAngle;
@@ -69,7 +71,8 @@ class VenetianBlinds extends StatelessWidget {
           if (verticalDistance <= radius) {
             // Calculate the y-position within the sun to determine color
             final normalizedY = (gapY - (sunCenterY - radius)) / (radius * 2);
-            final sunColor = _getSunColorAtPosition(normalizedY);
+            final bandIndex = SunColors.getBandIndex(gapY, constraints.maxHeight);
+            final sunColor = SunColors.getColorAtBand(bandIndex);
 
             bands.add(
               Positioned(
