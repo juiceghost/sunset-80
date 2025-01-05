@@ -19,6 +19,18 @@ class VenetianBlinds extends StatelessWidget {
     this.lineThickness = 0.1,
   });
 
+  Color _getSunColorAtPosition(double normalizedY) {
+    if (normalizedY < 0.25) {
+      return const Color(0xFFFFCC00); // Yellow
+    } else if (normalizedY < 0.5) {
+      return const Color(0xFFFF9900); // Yellow-orange
+    } else if (normalizedY < 0.75) {
+      return const Color(0xFFFF6600); // Orange
+    } else {
+      return const Color(0xFFFF3300); // Orange-red
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -29,10 +41,9 @@ class VenetianBlinds extends StatelessWidget {
         final sunCenterX = constraints.maxWidth / 2;
         final radius = sunSize / 2;
 
-        // Calculate sizes based on total available space and number of blinds
         final unitHeight = constraints.maxHeight / numberOfBlinds;
-        final gapHeight = unitHeight * lineThickness; // Gap height from parameter
-        final blindHeight = unitHeight - gapHeight; // Blind height is remaining space
+        final gapHeight = unitHeight * lineThickness;
+        final blindHeight = unitHeight - gapHeight;
 
         double currentY = 0;
         final bands = <Widget>[];
@@ -56,7 +67,10 @@ class VenetianBlinds extends StatelessWidget {
           final verticalDistance = (gapY - sunCenterY).abs();
 
           if (verticalDistance <= radius) {
-            // If gap intersects with sun, add a transparent line
+            // Calculate the y-position within the sun to determine color
+            final normalizedY = (gapY - (sunCenterY - radius)) / (radius * 2);
+            final sunColor = _getSunColorAtPosition(normalizedY);
+
             bands.add(
               Positioned(
                 top: gapY,
@@ -64,7 +78,7 @@ class VenetianBlinds extends StatelessWidget {
                 right: 0,
                 child: Container(
                   height: gapHeight,
-                  color: Colors.white.withOpacity(0.8),
+                  color: sunColor.withOpacity(0.8),
                 ),
               ),
             );
