@@ -7,6 +7,7 @@ class SunsetWithBlinds extends StatelessWidget {
   final List<Color> controlColors;
   final bool showBlinds;
   final double sunPosition;
+  final double lineThickness;
   final double sunSquish;
 
   const SunsetWithBlinds({
@@ -14,6 +15,7 @@ class SunsetWithBlinds extends StatelessWidget {
     required this.controlColors,
     this.showBlinds = true,
     this.sunPosition = 1.0,
+    this.lineThickness = 0.1,
     this.sunSquish = 1.2,
   });
 
@@ -25,10 +27,13 @@ class SunsetWithBlinds extends StatelessWidget {
         SunLayer(
           sunPosition: sunPosition,
           squishFactor: sunSquish,
+          sunSize: 140, // Make sure this matches in both places
         ),
         if (showBlinds)
           VenetianBlinds(
             sunPosition: sunPosition,
+            lineThickness: lineThickness,
+            sunSize: 140, // Make sure this matches in both places
           ),
       ],
     );

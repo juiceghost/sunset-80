@@ -20,6 +20,7 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
   bool _showBlinds = true;
   double _sunPosition = StorageService.loadSunPosition(); // Load saved position
   double _sunSquish = 1.0;  // Default squish
+  double _lineThickness = 0.1;
 
   @override
   void initState() {
@@ -295,6 +296,51 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
                           const Icon(Icons.arrow_upward, color: Colors.white, size: 16),
                         ],
                       ),
+                      const Text(
+                        'Line Thickness',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.remove, color: Colors.white, size: 16),
+                          Expanded(
+                            child: Slider(
+                              value: _lineThickness,
+                              min: 0.02,
+                              max: 0.2,
+                              onChanged: (value) {
+                                setState(() {
+                                  _lineThickness = value;
+                                });
+                              },
+                            ),
+                          ),
+                          const Icon(Icons.add, color: Colors.white, size: 16),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Sun Squish',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.compress, color: Colors.white, size: 16),
+                          Expanded(
+                            child: Slider(
+                              value: _sunSquish,
+                              min: 1.0,
+                              max: 1.5,
+                              onChanged: (value) {
+                                setState(() {
+                                  _sunSquish = value;
+                                });
+                              },
+                            ),
+                          ),
+                          const Icon(Icons.expand, color: Colors.white, size: 16),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -309,6 +355,7 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
                         showBlinds: _showBlinds,
                         sunPosition: _sunPosition,
                         sunSquish: _sunSquish,
+                        lineThickness: _lineThickness,
                       ),
                     ),
                   ),
@@ -360,6 +407,9 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
                         child: SunsetWithBlinds(
                           controlColors: controlColors,
                           showBlinds: _showBlinds,
+                          sunPosition: _sunPosition,
+                          lineThickness: _lineThickness,
+                          sunSquish: _sunSquish,
                         ),
                       ),
                     ),
