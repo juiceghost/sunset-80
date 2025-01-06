@@ -377,7 +377,7 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
                             child: Slider(
                               value: _bleedAmount,
                               min: 0.0,
-                              max: 1.0,
+                              max: 2.0,
                               onChanged: (value) {
                                 setState(() {
                                   _bleedAmount = value;
