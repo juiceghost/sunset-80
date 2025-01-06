@@ -1,4 +1,4 @@
-# 1980 sunset
+# 1980s sunset
 
 A new Flutter project.
 
