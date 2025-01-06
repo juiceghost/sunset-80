@@ -21,6 +21,8 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
   double _sunPosition = StorageService.loadSunPosition(); // Load saved position
   double _sunSquish = 1.0;  // Default squish
   double _lineThickness = 0.1;
+  double _diffractionIntensity = 0.0;
+  double _bleedAmount = 0.0;
 
   @override
   void initState() {
@@ -341,6 +343,50 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
                           const Icon(Icons.expand, color: Colors.white, size: 16),
                         ],
                       ),
+                      const Text(
+                        'Diffraction',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.waves_outlined, color: Colors.white, size: 16),
+                          Expanded(
+                            child: Slider(
+                              value: _diffractionIntensity,
+                              min: 0.0,
+                              max: 3.0,
+                              onChanged: (value) {
+                                setState(() {
+                                  _diffractionIntensity = value;
+                                  print("int $_diffractionIntensity");
+                                });
+                              },
+                            ),
+                          ),
+                          const Icon(Icons.waves, color: Colors.white, size: 16),
+                        ],
+                      ),
+                      const Text(
+                        'Bleed Effect',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.height, color: Colors.white, size: 16),
+                          Expanded(
+                            child: Slider(
+                              value: _bleedAmount,
+                              min: 0.0,
+                              max: 1.0,
+                              onChanged: (value) {
+                                setState(() {
+                                  _bleedAmount = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -356,6 +402,8 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
                         sunPosition: _sunPosition,
                         sunSquish: _sunSquish,
                         lineThickness: _lineThickness,
+                        diffractionIntensity: _diffractionIntensity,
+                        bleedAmount: _bleedAmount,
                       ),
                     ),
                   ),
@@ -410,6 +458,7 @@ class _SunsetEditorScreenState extends State<SunsetEditorScreen> {
                           sunPosition: _sunPosition,
                           lineThickness: _lineThickness,
                           sunSquish: _sunSquish,
+                          bleedAmount: _bleedAmount,
                         ),
                       ),
                     ),
